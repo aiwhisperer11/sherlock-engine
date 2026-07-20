@@ -1,6 +1,6 @@
 # Sherlock
 
-**Most AI tries to find the right answer. Sherlock eliminates the wrong ones.**
+**Most AI gives you the most plausible answer. Sherlock earns the answer by eliminating the alternatives and telling you exactly what would prove it wrong.**
 
 Sherlock is a falsification-driven investigation engine. Given an observed
 outcome, the declared normal behavior, and evidence, it runs a structured,
@@ -13,11 +13,15 @@ clue may be the event that never occurred.
 
 - **Live demo:** not yet published.
 - **Video (3 min):** not yet published.
-- **Zero-setup for judges:** the *View baseline (offline)* and *View two
-  iterations (offline)* buttons replay a full validated investigation with no
-  API key and no network.
+- **Zero-setup for judges:** the *View initial investigation* and *View
+  updated investigation* controls replay the same validated case at two stages,
+  with no API key and no network.
 
 *Screenshot to be added when a final capture is available.*
+
+## Live demo
+
+https://sherlock-engine.vercel.app
 
 ## Current status
 
@@ -118,15 +122,15 @@ Open `http://localhost:3000`.
 
 1. Select **Load example** to populate the Case B baseline form, then select
    **Investigate** to call `POST /api/investigate`.
-2. On a rendered result, select **Load follow-up example**, then
+2. On a rendered result, select **Add example follow-up evidence**, then
    **Re-investigate**. The server validates the prior snapshot, assigns the
    next evidence ID (`E5` for Case B), and creates iteration 2.
 3. The latest snapshot is rendered. The Learning Diff shows confidence changes,
    status transitions, entries into the Hypothesis Graveyard, and the model's
    learning summary. Evidence introduced in the latest iteration is marked in
    the case evidence list.
-4. For a no-network demo, use **View baseline (offline)** or
-   **View two iterations (offline)**.
+4. For a no-network demo, use **View initial investigation** or **View updated
+   investigation** under **Example case**.
 
 ## Investigation API
 

@@ -56,6 +56,7 @@ export default function SherlockForm({ onSnapshot, onSnapshotsLoaded }: Sherlock
   const [userHypotheses, setUserHypotheses] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
+  const [isOpen, setIsOpen] = useState(true);
 
   function updateEvidence(index: number, field: keyof FormEvidence, value: string) {
     setEvidence((items) => items.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item));
@@ -82,6 +83,7 @@ export default function SherlockForm({ onSnapshot, onSnapshotsLoaded }: Sherlock
     if (parsed.ok && parsedIteration2.ok) {
       onSnapshotsLoaded(includeIteration2 ? [parsed.investigation, parsedIteration2.investigation] : [parsed.investigation]);
       setError(null);
+      setIsOpen(false);
       return;
     }
 
@@ -136,6 +138,7 @@ export default function SherlockForm({ onSnapshot, onSnapshotsLoaded }: Sherlock
       }
 
       onSnapshot(parsed.investigation);
+      setIsOpen(false);
     } catch {
       setError({ status: 0, message: "The investigation request could not be completed.", validationErrors: [] });
     } finally {
@@ -151,13 +154,18 @@ export default function SherlockForm({ onSnapshot, onSnapshotsLoaded }: Sherlock
   );
 
   return (
-    <section aria-labelledby="investigation-form-heading" className="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="investigation-form-heading" className="text-xl font-semibold">New investigation</h2>
-        <div className="flex gap-2">
+    <details open={isOpen} onToggle={(event) => setIsOpen(event.currentTarget.open)} className="rounded-lg border border-zinc-200 p-5 dark:border-zinc-800">
+      <summary id="investigation-form-heading" className="cursor-pointer text-xl font-semibold">New investigation</summary>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button type="button" onClick={loadExample} className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700">Load example</button>
-          <button type="button" onClick={() => loadOfflineSnapshots(false)} className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700">View baseline (offline)</button>
-          <button type="button" onClick={() => loadOfflineSnapshots(true)} className="rounded border border-zinc-300 px-3 py-2 text-sm dark:border-zinc-700">View two iterations (offline)</button>
+          <div>
+            <p className="text-sm font-medium">Example case</p>
+            <div className="mt-1 flex flex-wrap gap-2">
+              <button type="button" onClick={() => loadOfflineSnapshots(false)} className="rounded border border-zinc-300 px-3 py-2 text-left text-sm dark:border-zinc-700"><span className="block">View initial investigation</span><span className="block text-xs text-zinc-600 dark:text-zinc-400">Iteration 1 · baseline</span></button>
+              <button type="button" onClick={() => loadOfflineSnapshots(true)} className="rounded border border-zinc-300 px-3 py-2 text-left text-sm dark:border-zinc-700"><span className="block">View updated investigation</span><span className="block text-xs text-zinc-600 dark:text-zinc-400">Iteration 2 · after new evidence</span></button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -195,6 +203,6 @@ export default function SherlockForm({ onSnapshot, onSnapshotsLoaded }: Sherlock
         {error && <div role="alert" className="rounded border border-red-300 bg-red-50 p-3 text-sm text-red-900"><p><strong>{error.status ? `Error ${error.status}` : "Error"}:</strong> {error.message}</p>{error.validationErrors.length > 0 && <ul className="mt-2 list-disc pl-5">{error.validationErrors.map((entry) => <li key={entry}>{entry}</li>)}</ul>}</div>}
         <button type="submit" disabled={loading || !canSubmit} className="rounded bg-zinc-900 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900">{loading ? "Investigating…" : "Investigate"}</button>
       </form>
-    </section>
+    </details>
   );
 }
