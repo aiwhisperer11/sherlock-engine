@@ -1,28 +1,76 @@
 # Sherlock
 
-**Most AI gives you the most plausible answer. Sherlock earns the answer by eliminating the alternatives and telling you exactly what would prove it wrong.**
+> **Most AI gives you the most plausible answer. Sherlock earns the answer by trying to prove itself wrong.**
 
-Sherlock is a falsification-driven investigation engine. Given an observed
-outcome, the declared normal behavior, and evidence, it runs a structured,
-Popperian investigation: a 2x2 expectation matrix where *expected-but-absent*
-is the signature quadrant, competing falsifiable hypotheses with a lifecycle
-(active / weakened / rejected / revived), a Hypothesis Graveyard with explicit
-resurrection conditions, and — instead of a verdict — the single next test with
-the highest power to discriminate between its leading hypotheses. The strongest
-clue may be the event that never occurred.
+**Demo video**  
+https://www.youtube.com/watch?v=xkpN5Y9lYGg
 
-- **Live demo:** not yet published.
-- **Video (3 min):** not yet published.
-- **Zero-setup for judges:** the *View initial investigation* and *View
-  updated investigation* controls replay the same validated case at two stages,
-  with no API key and no network.
+**Live demo**  
+https://sherlock-engine.vercel.app/
 
-*Screenshot to be added when a final capture is available.*
+**Repository**  
+https://github.com/aiwhisperer11/sherlock-engine
 
-## Live demo
+---
 
-https://sherlock-engine.vercel.app
+## Why I built Sherlock
 
+I started this project with a simple observation.
+
+Large language models are very good at producing plausible explanations. They are much less disciplined at looking for reasons why those explanations might be wrong.
+
+In other words, they suffer from the same confirmation bias that affects human investigations.
+
+Once a model finds a coherent explanation, it naturally tends to reinforce it instead of actively searching for competing ones.
+
+That is useful if your goal is to answer questions.
+
+It is dangerous if your goal is to investigate.
+
+Sherlock is an experiment built around a different question:
+
+> **What happens if we force an LLM to think like an investigator instead of an assistant?**
+
+Not by asking it to "reason better", but by changing the investigation itself.
+
+Instead of producing the first plausible explanation, Sherlock forces the model to work under a different set of constraints:
+
+- Every conclusion must compete with alternative explanations.
+- Every hypothesis must explain what evidence supports it.
+- Every hypothesis must explain what evidence contradicts it.
+- Every hypothesis must declare exactly what observation would prove it wrong.
+- Every new piece of evidence must update the existing investigation instead of replacing it.
+
+The objective is not to make the model produce a better answer.
+
+The objective is to make it **earn** the answer.
+
+---
+
+## What Sherlock does
+
+Sherlock receives four things:
+
+- **What happened**
+- **What should have happened**
+- **The available evidence**
+- **Optionally, the investigator's own hypotheses**
+
+Instead of returning a single explanation, it builds a structured investigation.
+
+The investigation includes:
+
+- An **Expectation Matrix** that separates expected and unexpected observations, paying special attention to expected events that never occurred.
+- **Competing hypotheses** that evolve as new evidence is introduced.
+- A **Hypothesis Graveyard** that preserves rejected explanations together with the exact conditions that would make them plausible again.
+- **Missing evidence**, ranked by its ability to reduce uncertainty.
+- The **single next test** with the highest discriminating power between the leading hypotheses.
+
+Every investigation can continue as new evidence appears.
+
+Reasoning is no longer a one-shot answer.
+
+It becomes an evolving investigation.
 ## Current status
 
 Current implementation includes:
